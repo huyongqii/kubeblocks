@@ -1,6 +1,6 @@
 module github.com/apecloud/kubeblocks
 
-go 1.19
+go 1.20
 
 require (
 	cuelang.org/go v0.4.3
@@ -14,7 +14,7 @@ require (
 	github.com/briandowns/spinner v1.23.0
 	github.com/clbanning/mxj/v2 v2.5.7
 	github.com/containerd/stargz-snapshotter/estargz v0.13.0
-	github.com/containers/common v0.48.1
+	github.com/containers/common v0.49.1
 	github.com/dapr/components-contrib v1.9.6
 	github.com/dapr/dapr v1.9.5
 	github.com/dapr/go-sdk v1.7.0
@@ -355,7 +355,6 @@ require (
 	google.golang.org/api v0.107.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230104163317-caabf589fcbf // indirect
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.3.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
