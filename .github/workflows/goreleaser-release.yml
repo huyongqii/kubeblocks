@@ -11,6 +11,10 @@ permissions:
   # packages: write
   # issues: write
 
+env:
+  TAG_NAME: ${{ github.ref_name }}
+  FURY_ACCOUNT: "huyongqii"
+
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
@@ -38,7 +42,7 @@ jobs:
           # either 'goreleaser' (default) or 'goreleaser-pro':
           distribution: goreleaser
           version: latest
-          args: release --clean
+          args: release --config .goreleaser.yml --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Your GoReleaser Pro key, if you are using the 'goreleaser-pro'
