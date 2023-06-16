@@ -59,3 +59,7 @@ tmp/
 
 # helm dependency charts
 deploy/**/charts
+
+dist/
+
+dist/
