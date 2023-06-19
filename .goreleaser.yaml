@@ -42,7 +42,6 @@ release:
   github:
     owner: huyongqii
     name: tap-test
-  target_commitish: '{{ .Commit }}'
 
 #nfpms:
 #  -
