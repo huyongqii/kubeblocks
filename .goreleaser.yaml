@@ -28,9 +28,8 @@ archives:
       {{- .Os }}-
       {{- if eq .Arch "amd64" }}amd64
       {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}-
-      {{ .Tag }}
+      {{- else }}{{ .Arch }}{{ end }}-
+      {{- .Tag }}
     # use zip for windows archives
     format_overrides:
     - goos: windows
@@ -68,15 +67,12 @@ brews:
   - name: kbcli
     tap:
       name: kbcli-tap
-      token: $GITHUB_TOKEN
       owner: apecloud
       branch: main
       pull_request:
         enabled: false
       git:
         url: 'https://github.com/huyongqii/tap-test.git'
-        private_key: $GITHUB_TOKEN
-        ssh_command: 'ssh -i {{ .Env.KEY }} -o SomeOption=yes'
 
     goarm: 6
     goamd64: v1
