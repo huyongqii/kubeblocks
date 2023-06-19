@@ -111,10 +111,53 @@ brews:
       - svn
       - bash
 
+    # Repository to push the generated files to.
     repository:
-        owner: apecloud
-        name: tap-test
-        branch: main
+      # Repository owner.
+      #
+      # Templates: allowed
+      owner: apecloud
+
+      # Repository name.
+      #
+      # Templates: allowed
+      name: tap-test
+
+      # Optionally a branch can be provided.
+      #
+      # Default: default repository branch
+      # Templates: allowed
+      branch: main
+
+      # Sets up pull request creation instead of just pushing to the given branch.
+      # Make sure the 'branch' property is different from base before enabling
+      # it.
+      #
+      # Since: v1.17
+      pull_request:
+        # Whether to enable it or not.
+        enabled: false
+
+        # Whether to open the PR as a draft or not.
+        #
+        # Default: false
+        # Since: v1.19
+        draft: true
+
+        # Base can also be another repository, in which case the owner and name
+        # above will be used as HEAD, allowing cross-repository pull requests.
+        #
+        # Since: v1.19
+        base:
+          owner: goreleaser
+          name: my-repo
+          branch: main
+
+      # Clone, create the file, commit and push, to a regular Git repository.
+      #
+      # Notice that this will only have any effect if the given URL is not
+      # empty.
+      #
 
 checksum:
   name_template: 'checksums.txt'
