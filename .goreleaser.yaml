@@ -111,11 +111,10 @@ brews:
       - svn
       - bash
 
-    # Repository to push the generated files to.
     repository:
-      owner: apecloud
-      name: tap-test
-      branch: main
+        owner: apecloud
+        name: tap-test
+        branch: main
 
 checksum:
   name_template: 'checksums.txt'
