@@ -30,7 +30,7 @@ archives:
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}-
-      v{{ .Tag }}"
+      {{ .Tag }}
     # use zip for windows archives
     format_overrides:
     - goos: windows
@@ -66,6 +66,18 @@ archives:
 
 brews:
   - name: kbcli
+    tap:
+      name: kbcli-tap
+      token: $GITHUB_TOKEN
+      owner: apecloud
+      branch: main
+      pull_request:
+        enabled: false
+      git:
+        url: 'https://github.com/huyongqii/tap-test.git'
+        private_key: $GITHUB_TOKEN
+        ssh_command: 'ssh -i {{ .Env.KEY }} -o SomeOption=yes'
+
     goarm: 6
     goamd64: v1
     url_template: "https://github.com/huyongqii/kubeblocks/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
@@ -103,6 +115,11 @@ brews:
 
 scoops:
   - name: kbcli
+    bucket:
+      name: kbcli-scoop
+      owner: apecloud
+      git:
+        url: 'https://github.com/huyongqii/scoop-test.git'
     folder: Scoops
     commit_author:
       name: huyongqii
@@ -110,11 +127,6 @@ scoops:
     commit_msg_template: "Scoop formula update for {{ .ProjectName }} version {{ .Tag }}"
     description: "Software to create fast and easy drum rolls."
     license: MIT
-    goamd64: v3
-    repository:
-      owner: apecloud
-      name: scoop-test
-      branch: main
 
 checksum:
   name_template: 'checksums.txt'
