@@ -11,7 +11,7 @@ builds:
     binary: kbcli
     goos:
 #      - linux
-      - windows
+#      - windows
       - darwin
     goarch:
       - amd64
@@ -21,7 +21,7 @@ builds:
       - CGO_ENABLED=0
 env:
   - ProjectName=kbcli
-  - PrivateKeyPath=./id_rsa
+#  - PrivateKeyPath=./id_rsa
 
 archives:
   - format: tar.gz
@@ -37,6 +37,12 @@ archives:
     format_overrides:
     - goos: windows
       format: zip
+
+release:
+  github:
+    owner: huyongqii
+    name: tap-test
+  target_commitish: '{{ .Commit }}'
 
 #nfpms:
 #  -
@@ -63,70 +69,70 @@ archives:
 #    # Path that the binaries should be installed.
 #    bindir: /usr/bin
 
-brews:
-  - name: kbcli
-    tap:
-      name: tap-test
-      owner: huyongqii
-#      token: "{{ .Env.GITHUB_TOKEN }}"
-      branch: main
-      pull_request:
-        enabled: false
-      git:
-        url: "git@github.com:huyongqii/tap-test.git"
-        private_key: "{{ .Env.PrivateKeyPath }}"
-
-    goarm: 6
-    goamd64: v1
-    url_template: "https://github.com/huyongqii/kubeblocks/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-    download_strategy: CurlDownloadStrategy
-    custom_require: custom_download_strategy
-    # Git author used to commit to the repository.
-    commit_author:
-      name: huyongqii
-      email: yongqi_hu@163.com
-    commit_msg_template: "Brew formula update for {{ .Env.ProjectName }} version {{ .Tag }}"
-    # Folder inside the repository to put the formula.
-    folder: Formula
-
-    # Caveats for the user of your binary.
-    caveats: "How to use this binary"
-    description: "kbcli is a CLI tool for kubeblocks"
-    license: "MIT"
-
-    # Packages your package depends on.
-    dependencies:
-      - name: git
-      - name: zsh
-        type: optional
-      - name: fish
-        version: v1.2.3
-      # if providing both version and type, only the type will be taken into
-      # account.
-      - name: elvish
-        type: optional
-        version: v1.2.3
-    # Packages that conflict with your package.
-    conflicts:
-      - svn
-      - bash
-
-scoops:
-  - name: kbcli
-    bucket:
-      name: scoop-test
-      owner: huyongqii
-#      token: "{{ .Env.GITHUB_TOKEN }}"
-      git:
-        url: "git@github.com:huyongqii/scoop-test.git"
-        private_key: "{{ .Env.PrivateKeyPath }}"
-    folder: Scoops
-    commit_author:
-      name: huyongqii
-      email: yongqi_hu@163.com
-    commit_msg_template: "Scoop formula update for {{ .Env.ProjectName }} version {{ .Tag }}"
-    description: "Software to create fast and easy drum rolls."
-    license: MIT
+#brews:
+#  - name: kbcli
+#    tap:
+#      name: tap-test
+#      owner: huyongqii
+##      token: "{{ .Env.GITHUB_TOKEN }}"
+#      branch: main
+#      pull_request:
+#        enabled: false
+#      git:
+#        url: "git@github.com:huyongqii/tap-test.git"
+#        private_key: "{{ .Env.PrivateKeyPath }}"
+#
+#    goarm: 6
+#    goamd64: v1
+#    url_template: "https://github.com/huyongqii/kubeblocks/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+#    download_strategy: CurlDownloadStrategy
+#    custom_require: custom_download_strategy
+#    # Git author used to commit to the repository.
+#    commit_author:
+#      name: huyongqii
+#      email: yongqi_hu@163.com
+#    commit_msg_template: "Brew formula update for {{ .Env.ProjectName }} version {{ .Tag }}"
+#    # Folder inside the repository to put the formula.
+#    folder: Formula
+#
+#    # Caveats for the user of your binary.
+#    caveats: "How to use this binary"
+#    description: "kbcli is a CLI tool for kubeblocks"
+#    license: "MIT"
+#
+#    # Packages your package depends on.
+#    dependencies:
+#      - name: git
+#      - name: zsh
+#        type: optional
+#      - name: fish
+#        version: v1.2.3
+#      # if providing both version and type, only the type will be taken into
+#      # account.
+#      - name: elvish
+#        type: optional
+#        version: v1.2.3
+#    # Packages that conflict with your package.
+#    conflicts:
+#      - svn
+#      - bash
+#
+#scoops:
+#  - name: kbcli
+#    bucket:
+#      name: scoop-test
+#      owner: huyongqii
+##      token: "{{ .Env.GITHUB_TOKEN }}"
+#      git:
+#        url: "git@github.com:huyongqii/scoop-test.git"
+#        private_key: "{{ .Env.PrivateKeyPath }}"
+#    folder: Scoops
+#    commit_author:
+#      name: huyongqii
+#      email: yongqi_hu@163.com
+#    commit_msg_template: "Scoop formula update for {{ .Env.ProjectName }} version {{ .Tag }}"
+#    description: "Software to create fast and easy drum rolls."
+#    license: MIT
 
 checksum:
   name_template: '{{ .Env.ProjectName }}-checksums.txt'
