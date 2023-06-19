@@ -4,6 +4,7 @@ before:
     - go mod tidy
     # you may remove this if you don't need go generate
     #    - go generate ./...
+    - make generate
 builds:
   - main: cmd/cli/main.go
     id: "kbcli"
@@ -19,21 +20,21 @@ builds:
       - ASSUME_NO_MOVING_GC_UNSAFE_RISK_IT_WITH=go1.20
       - CGO_ENABLED=0
 
-archives:
-  - format: tar.gz
-    # this name template makes the OS and Arch compatible with the results of uname.
-    name_template: >-
-      {{ .ProjectName }}-
-      {{- .Os }}-
-      {{- if eq .Arch "amd64" }}amd64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}-
-      v{{ .Tag }}.{{ .Ext }}"
-    # use zip for windows archives
-    format_overrides:
-    - goos: windows
-      format: zip
+#archives:
+#  - format: tar.gz
+#    # this name template makes the OS and Arch compatible with the results of uname.
+#    name_template: >-
+#      {{ .ProjectName }}-
+#      {{- .Os }}-
+#      {{- if eq .Arch "amd64" }}amd64
+#      {{- else if eq .Arch "386" }}i386
+#      {{- else }}{{ .Arch }}{{ end }}
+#      {{- if .Arm }}v{{ .Arm }}{{ end }}-
+#      v{{ .Tag }}"
+#    # use zip for windows archives
+#    format_overrides:
+#    - goos: windows
+#      format: zip
 
 #nfpms:
 #  -
@@ -109,6 +110,12 @@ brews:
     conflicts:
       - svn
       - bash
+
+    # Repository to push the generated files to.
+    repository:
+      owner: apecloud
+      name: tap-test
+      branch: main
 
 checksum:
   name_template: 'checksums.txt'
