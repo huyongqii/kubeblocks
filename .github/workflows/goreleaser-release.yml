@@ -18,6 +18,7 @@ jobs:
   goreleaser:
     runs-on: ubuntu-latest
     steps:
+      - name: create and publish release
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -42,3 +43,12 @@ jobs:
           # Your GoReleaser Pro key, if you are using the 'goreleaser-pro'
           # distribution:
           # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
+
+
+      - name: publish .exe assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: kbcli
+          path: |
+            ${{ github.workspace }}/dist/kbcli_windows_amd64_v1/*
+            ${{ github.workspace }}/dist/kbcli_windows_arm64/*

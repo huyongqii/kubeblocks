@@ -9,10 +9,11 @@ builds:
   - main: cmd/cli/main.go
     id: "kbcli"
     binary: kbcli
+#    buildmode: exe
     goos:
-      - linux
+#      - linux
       - windows
-      - darwin
+#      - darwin
     goarch:
       - amd64
       - arm64
@@ -36,8 +37,8 @@ archives:
     # use zip for windows archives
     format_overrides:
     - goos: windows
-      format: zip
-
+      format:
+        zip
 release:
   github:
     owner: huyongqii
@@ -136,6 +137,8 @@ nfpms:
 checksum:
   name_template: '{{ .Env.ProjectName }}-checksums.txt'
   algorithm: sha256
+#signs:
+#  - artifacts: checksum
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 changelog:
