@@ -66,14 +66,14 @@ archives:
 brews:
   - name: kbcli
     tap:
-      name: kbcli-tap
-      owner: apecloud
+      name: tap-test
+      owner: huyongqii
 #      token: "{{ .Env.GITHUB_TOKEN }}"
       branch: main
       pull_request:
         enabled: false
       git:
-        url: "https://github.com/huyongqii/tap-test.git"
+        url: "git@github.com:huyongqii/tap-test.git"
         private_key: "{{ .Env.PrivateKeyPath }}"
 
     goarm: 6
@@ -114,11 +114,11 @@ brews:
 scoops:
   - name: kbcli
     bucket:
-      name: kbcli-scoop
-      owner: apecloud
+      name: scoop-test
+      owner: huyongqii
 #      token: "{{ .Env.GITHUB_TOKEN }}"
       git:
-        url: "https://github.com/huyongqii/scoop-test.git"
+        url: "git@github.com:huyongqii/scoop-test.git"
         private_key: "{{ .Env.PrivateKeyPath }}"
     folder: Scoops
     commit_author:
@@ -129,7 +129,7 @@ scoops:
     license: MIT
 
 checksum:
-  name_template: '{{ .Env.ProjectName }}checksums.txt'
+  name_template: '{{ .Env.ProjectName }}-checksums.txt'
   algorithm: sha256
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
