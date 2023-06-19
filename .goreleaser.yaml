@@ -10,7 +10,7 @@ builds:
     id: "kbcli"
     binary: kbcli
     goos:
-    #      - linux
+#      - linux
       - windows
       - darwin
     goarch:
@@ -19,12 +19,15 @@ builds:
     env:
       - ASSUME_NO_MOVING_GC_UNSAFE_RISK_IT_WITH=go1.20
       - CGO_ENABLED=0
+env:
+  - ProjectName=kbcli
+  - PrivateKeyPath=./id_rsa
 
 archives:
   - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
-      {{ .ProjectName }}-
+      {{- .Env.ProjectName }}-
       {{- .Os }}-
       {{- if eq .Arch "amd64" }}amd64
       {{- else if eq .Arch "386" }}i386
@@ -39,9 +42,7 @@ archives:
 #  -
 #    id: kbcli
 #    package_name: kbcli
-#    # Default: '{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}'
-#    # Templates: allowed
-#    file_name_template: "{{ .PackageName }}-{{ .Os }}-{{ .Arch }}{{ with .Arm }}-{{ .Tag }}"
+#    file_name_template: "{{ .Env.ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Tag }}"
 #    builds:
 #      - kbcli
 #
@@ -60,7 +61,6 @@ archives:
 #      - zsh
 #
 #    # Path that the binaries should be installed.
-#    # Default: '/usr/bin'
 #    bindir: /usr/bin
 
 brews:
@@ -68,13 +68,13 @@ brews:
     tap:
       name: kbcli-tap
       owner: apecloud
-      token: "{{ .Env.GITHUB_TOKEN }}"
+#      token: "{{ .Env.GITHUB_TOKEN }}"
       branch: main
       pull_request:
         enabled: false
       git:
         url: "https://github.com/huyongqii/tap-test.git"
-        private_key: "{{ .Env.GITHUB_TOKEN }}"
+        private_key: "{{ .Env.PrivateKeyPath }}"
 
     goarm: 6
     goamd64: v1
@@ -85,7 +85,7 @@ brews:
     commit_author:
       name: huyongqii
       email: yongqi_hu@163.com
-    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    commit_msg_template: "Brew formula update for {{ .Env.ProjectName }} version {{ .Tag }}"
     # Folder inside the repository to put the formula.
     folder: Formula
 
@@ -116,20 +116,21 @@ scoops:
     bucket:
       name: kbcli-scoop
       owner: apecloud
-      token: "{{ .Env.GITHUB_TOKEN }}"
+#      token: "{{ .Env.GITHUB_TOKEN }}"
       git:
         url: "https://github.com/huyongqii/scoop-test.git"
-        private_key: "{{ .Env.GITHUB_TOKEN }}"
+        private_key: "{{ .Env.PrivateKeyPath }}"
     folder: Scoops
     commit_author:
       name: huyongqii
       email: yongqi_hu@163.com
-    commit_msg_template: "Scoop formula update for {{ .ProjectName }} version {{ .Tag }}"
+    commit_msg_template: "Scoop formula update for {{ .Env.ProjectName }} version {{ .Tag }}"
     description: "Software to create fast and easy drum rolls."
     license: MIT
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: '{{ .Env.ProjectName }}checksums.txt'
+  algorithm: sha256
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 changelog:
