@@ -39,6 +39,9 @@ jobs:
           mkdir tmp
           cd tmp  
           touch xx.txt
+          touch er.txt
+          echo "dsfasd" > xx.txt
+          echo "dsfasd" > er.txt
           cd ..
           tar -czvf archive.tar.gz tmp
           tar -czvf archive2.tar.gz tmp
@@ -99,11 +102,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: |
-            ${{ github.workspace }}/find.sh
-            ${{ github.workspace }}/tmp/xx.txt
+          asset_path: ${{ github.workspace }}/tmp/*.txt
           asset_name: my-artifact.zip
-          asset_content_type: application/gzip
 
 
 #      - name: Upload assets to a Release
