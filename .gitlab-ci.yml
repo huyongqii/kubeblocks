@@ -1,8 +1,8 @@
 stages:
-  - release
+  - push
 
 release:
-  stage: release
+  stage: push
   image:
     name: goreleaser/goreleaser
     entrypoint: ['']

@@ -40,7 +40,7 @@ archives:
 
 gitlab_urls:
   use_package_registry: true
-  
+
 release:
   github:
     owner: huyongqii
