@@ -43,7 +43,6 @@ jobs:
           args: release --config ${{ github.workspace }}/.goreleaser.yaml --clean
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          GITLAB_TOKEN: ${{ env.GITLAB_ACCESS_TOKEN }}
 
 #      - name: upload .rpm and .deb to fury.io
 #        run: |
