@@ -54,7 +54,7 @@ nfpms:
 
     vendor: ApeCloud Inc.
     homepage: kubeblocks.io
-    maintainer: ApeCloud Inc. <yongqi_hu@163.com>
+    maintainer: ApeCloud Inc.
     description: A CLI tool for kubeblocks
     license: Apache-2.0
     release: "1"
@@ -141,7 +141,7 @@ checksum:
 
 signs:
   - artifacts: package
-    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}","${artifact}"]
+    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}"]
     output: true
 
 snapshot:
