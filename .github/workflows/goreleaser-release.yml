@@ -75,7 +75,7 @@ jobs:
       - name: Upload Release Assets
         uses: alexellis/upload-assets@0.4.0
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         with:
           asset_paths: '["${{ github.workspace }}/dist/*.{gz,zip}"]'
 
