@@ -5,15 +5,18 @@ on:
     tags:
       - '*'
 
-
 permissions:
   contents: write
   # packages: write
   # issues: write
 
 env:
+  GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+  FURY_TOKEN: ${{ secrets.FURY_UPLOAD_TOKEN }}
   TAG_NAME: ${{ github.ref_name }}
-  FURY_ACCOUNT: "huyongqii"
+  FURY_ACCOUNT: 'huyongqii'
+  CLI_REPO: 'huyongqi/tap-test'
+
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
@@ -33,21 +36,31 @@ jobs:
 
       - uses: goreleaser/goreleaser-action@v4
         with:
-          # either 'goreleaser' (default) or 'goreleaser-pro':
           distribution: goreleaser
           version: latest
           args: release --config ${{ github.workspace }}/.goreleaser.yaml --clean
         env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          # Your GoReleaser Pro key, if you are using the 'goreleaser-pro'
-          # distribution:
-          # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
+      - name: upload .rpm and .deb to fury.io
+        run: |
+          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
+            echo "Processing file: $file"
+            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
+          done
 
-      - name: publish .exe assets
-        uses: actions/upload-artifact@v3
+      - name: get release kbcli upload url
+        run: |
+          echo 'UPLOAD_URL='`bash ${{ github.workspace }}/.github/utils/utils.sh \
+            --tag-name ${{ env.TAG_NAME }} \
+            --type 3 \
+            --github-repo ${{ env.CLI_REPO }} \
+            --github-token ${{ env.GITHUB_TOKEN }}` >> $GITHUB_ENV
+
+      - name: upload kbcli binary release for winget
+        uses: actions/upload-release-asset@main
         with:
-          name: kbcli
-          path: |
-            ${{ github.workspace }}/dist/kbcli_windows_amd64_v1/*
-            ${{ github.workspace }}/dist/kbcli_windows_arm64/*
+          upload_url: ${{ env.UPLOAD_URL }}
+          asset_path: ${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe
+          asset_name: ${{ env.CLI_NAME }}.exe
+          asset_content_type: application/octet-stream

@@ -9,9 +9,8 @@ builds:
   - main: cmd/cli/main.go
     id: "kbcli"
     binary: kbcli
-#    buildmode: exe
     goos:
-#      - linux
+      - linux
       - windows
 #      - darwin
     goarch:
@@ -22,7 +21,6 @@ builds:
       - CGO_ENABLED=0
 env:
   - ProjectName=kbcli
-#  - PrivateKeyPath=./id_rsa
 
 archives:
   - format: tar.gz
@@ -44,30 +42,31 @@ release:
     owner: huyongqii
     name: tap-test
 
-#nfpms:
-#  -
-#    id: kbcli
-#    package_name: kbcli
-#    file_name_template: "{{ .Env.ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Tag }}"
-#    builds:
-#      - kbcli
-#
-#    vendor: ApeCloud Inc.
-#    homepage: kubeblocks.io
-#    maintainer: ApeCloud Inc. <yongqi_hu@163.com>
-#    description: A CLI tool for kubeblocks
-#    license: Apache-2.0
-#
-#    formats:
-#      - deb
-#      - rpm
-#
-#    dependencies:
-#      - git
-#      - zsh
-#
-#    # Path that the binaries should be installed.
-#    bindir: /usr/bin
+nfpms:
+  -
+    id: kbcli
+    package_name: kbcli
+    file_name_template: "{{ .Env.ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Tag }}"
+    builds:
+      - kbcli
+
+    vendor: ApeCloud Inc.
+    homepage: kubeblocks.io
+    maintainer: ApeCloud Inc. <yongqi_hu@163.com>
+    description: A CLI tool for kubeblocks
+    license: Apache-2.0
+    release: "1"
+
+    formats:
+      - deb
+      - rpm
+
+    dependencies:
+      - git
+      - zsh
+
+    # Path that the binaries should be installed.
+    bindir: /usr/bin
 
 #brews:
 #  - name: kbcli
