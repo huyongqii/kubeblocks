@@ -84,19 +84,14 @@ jobs:
 #        with:
 #          asset_paths: '["${{ github.workspace }}/find.sh"]'
 
-      - name: Upload release binaries
-        uses: boxpositron/upload-multiple-releases@1.0.6
+      - name: Create Release With Asset
+        id: Release-AIO
+        uses: Hs1r1us/Release-AIO@v2.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_config: |
-            ${{ github.workspace }}/*.sh
-            ${{ github.workspace }}/*.tar.gz
-          tag_name: v${{ env.TAG_NAME }}
-          release_name: ${{ env.TAG_NAME }}
-          draft: false
-          prerelease: false
-          overwrite: true
+          tag_name: ${{ github.ref }}
+          asset_files: '${{ github.workspace }}/tmp'
 
 
 #      - name: Upload assets to a Release
