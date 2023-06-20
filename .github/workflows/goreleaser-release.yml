@@ -52,12 +52,17 @@ jobs:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
 
-      - name: upload .rpm and .deb to fury.io
-        run: |
-          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
-            echo "Processing file: $file"
-            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
-          done
+#      - name: upload .rpm and .deb to fury.io
+#        run: |
+#          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
+#            echo "Processing file: $file"
+#            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
+#          done
+
+      - name: Upload GitHub release assets
+        uses: vesoft-inc/upload-assets@v1.0.0
+        with:
+          asset-path: ${{ github.workspace }}/dist
 
 #      - name: get release kbcli upload url
 #        run: |
