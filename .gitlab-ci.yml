@@ -1,5 +1,6 @@
 stages:
   - push
+  - build
 
 release:
   stage: push
