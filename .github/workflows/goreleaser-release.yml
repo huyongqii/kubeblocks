@@ -55,18 +55,19 @@ jobs:
 #      - name: upload .rpm and .deb to fury.io
 #        run: |
 #          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
-#            echo "Processing file: $file"
 #            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
 #          done
 
       - name: upload asset
         run: |
+          pwd
+          ls dist
           mkdir dist/assets
           for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(gz|zip)$'); do
             echo "Processing file: $file"
-            filename=$(basename "$file")
-            cp $filename assets
+            cp $file assets
           done
+          ls dist/assets
 
       - name: Create Release With Asset
         id: Release-AIO
@@ -78,11 +79,16 @@ jobs:
           asset_files: '${{ github.workspace }}/dist/assets'
 
 
-#      - name: Upload assets to a Release
-#        uses: AButler/upload-release-assets@v2.0.2
-#        with:
-#          files: '${{ github.workspace }}/*.sh'
-#          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Duplicate Release With Asset to public_Repo
+        id: Release-AIO
+        uses: Hs1r1us/Release-AIO@v2.0.0
+        env:
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+        with:
+          tag_name: 'inherit' # Must use 'inherit' to get the latest release
+          body: 'hello world' # Will be added in the new release
+          repo: 'huyongqi/tap-test' # The format is like owner/repo
+          asset_files: '${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe' # Will be added in the new release
 
 
 
