@@ -81,16 +81,16 @@ jobs:
 #        with:
 #          asset_paths: '["${{ github.workspace }}/find.sh"]'
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+#      - name: Create Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: ${{ github.ref }}
+#          release_name: Release ${{ github.ref }}
+#          draft: false
+#          prerelease: false
 
 #      - name: Upload Release Asset
 #        id: upload-release-asset
@@ -108,8 +108,9 @@ jobs:
       - name: Upload assets to a Release
         uses: AButler/upload-release-assets@v2.0.2
         with:
-          files: '${{ github.workspace }}/*.tar.gz'
+          files: '${{ github.workspace }}/tmp/*'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ env.TAG_NAME }}
 
 
 
