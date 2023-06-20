@@ -13,7 +13,7 @@ permissions:
 env:
   GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
   TAG_NAME: ${{ github.ref_name }}
-  CLI_REPO: 'huyongqi/tap-test'
+  CLI_REPO: 'huyongqii/tap-test'
   CLI_NAME: 'kbcli'
   GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
   FURY_TOKEN: ${{ secrets.FURY_UPLOAD_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
           mkdir dist/assets
           for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(gz|zip)$'); do
             echo "Processing file: $file"
-            cp $file assets
+            cp $file ./dist/assets
           done
           ls dist/assets
 
@@ -85,7 +85,7 @@ jobs:
         with:
           tag_name: 'inherit' # Must use 'inherit' to get the latest release
           body: 'hello world' # Will be added in the new release
-          repo: 'huyongqi/tap-test' # The format is like owner/repo
+          repo: ${{ env.CLI_REPO }} # The format is like owner/repo
           asset_files: '${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe' # Will be added in the new release
 
 
