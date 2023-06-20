@@ -12,10 +12,12 @@ permissions:
 
 env:
   GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-  FURY_TOKEN: ${{ secrets.FURY_UPLOAD_TOKEN }}
   TAG_NAME: ${{ github.ref_name }}
-  FURY_ACCOUNT: 'huyongqii'
   CLI_REPO: 'huyongqi/tap-test'
+  CLI_NAME: 'kbcli'
+  GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+  FURY_TOKEN: ${{ secrets.FURY_UPLOAD_TOKEN }}
+  FURY_ACCOUNT: 'huyongqii'
 
 jobs:
   goreleaser:
@@ -41,13 +43,14 @@ jobs:
           args: release --config ${{ github.workspace }}/.goreleaser.yaml --clean
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITLAB_TOKEN: ${{ env.GITLAB_ACCESS_TOKEN }}
 
-      - name: upload .rpm and .deb to fury.io
-        run: |
-          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
-            echo "Processing file: $file"
-            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
-          done
+#      - name: upload .rpm and .deb to fury.io
+#        run: |
+#          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
+#            echo "Processing file: $file"
+#            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
+#          done
 
       - name: get release kbcli upload url
         run: |
