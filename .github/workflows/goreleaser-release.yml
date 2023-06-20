@@ -35,22 +35,30 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             libbtrfs-dev \
             libdevmapper-dev
+          
+          mkdir tmp
+          cd tmp  
+          touch xx.txt
+          cd ..
+          tar -czvf archive.tar.gz tmp
+          tar -czvf archive2.tar.gz tmp
+      
 
-      - name: Import GPG key
-        id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v5
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-
-      - uses: goreleaser/goreleaser-action@v4
-        with:
-          distribution: goreleaser
-          version: latest
-          args: release --config ${{ github.workspace }}/.goreleaser.yaml --clean
-        env:
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+      #      - name: Import GPG key
+#        id: import_gpg
+#        uses: crazy-max/ghaction-import-gpg@v5
+#        with:
+#          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+#          passphrase: ${{ secrets.PASSPHRASE }}
+#
+#      - uses: goreleaser/goreleaser-action@v4
+#        with:
+#          distribution: goreleaser
+#          version: latest
+#          args: release --config ${{ github.workspace }}/.goreleaser.yaml --clean
+#        env:
+#          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+#          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
 
 #      - name: upload .rpm and .deb to fury.io
 #        run: |
@@ -59,10 +67,18 @@ jobs:
 #            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
 #          done
 
-      - name: Upload GitHub release assets
-        uses: vesoft-inc/upload-assets@v1.0.0
+#      - name: Upload GitHub release assets
+#        uses: vesoft-inc/upload-assets@v1.0.0
+#        with:
+#          asset-path: ${{ github.workspace }}/dist
+
+      - name: Upload Release Assets
+        uses: alexellis/upload-assets@0.4.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          asset-path: ${{ github.workspace }}/dist
+          asset_paths: '["${{ github.workspace }}/dist/*.{gz,zip}"]'
+
 
 #      - name: get release kbcli upload url
 #        run: |
