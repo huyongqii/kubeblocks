@@ -35,19 +35,6 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             libbtrfs-dev \
             libdevmapper-dev
-          
-          mkdir tmp
-          cd tmp  
-          touch xx.txt
-          touch er.txt
-          echo "dsfasd" > xx.txt
-          echo "dsfasd" > er.txt
-          cd ..
-          tar -czvf archive.tar.gz tmp
-          tar -czvf archive2.tar.gz tmp
-          pwd
-          ls
-      
 
       #      - name: Import GPG key
 #        id: import_gpg
@@ -56,14 +43,14 @@ jobs:
 #          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
 #          passphrase: ${{ secrets.PASSPHRASE }}
 #
-#      - uses: goreleaser/goreleaser-action@v4
-#        with:
-#          distribution: goreleaser
-#          version: latest
-#          args: release --config ${{ github.workspace }}/.goreleaser.yaml --clean
-#        env:
-#          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-#          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+      - uses: goreleaser/goreleaser-action@v4
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --config ${{ github.workspace }}/.goreleaser.yaml --clean
+        env:
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
 
 #      - name: upload .rpm and .deb to fury.io
 #        run: |
@@ -72,17 +59,14 @@ jobs:
 #            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
 #          done
 
-#      - name: Upload GitHub release assets
-#        uses: vesoft-inc/upload-assets@v1.0.0
-#        with:
-#          asset-path: ${{ github.workspace }}/dist
-
-#      - name: Upload Release Assets
-#        uses: alexellis/upload-assets@0.4.0
-#        env:
-#          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-#        with:
-#          asset_paths: '["${{ github.workspace }}/find.sh"]'
+      - name: upload asset
+        run: |
+          mkdir dist/assets
+          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(gz|zip)$'); do
+            echo "Processing file: $file"
+            filename=$(basename "$file")
+            cp $filename assets
+          done
 
       - name: Create Release With Asset
         id: Release-AIO
@@ -91,7 +75,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          asset_files: '${{ github.workspace }}/*.sh'
+          asset_files: '${{ github.workspace }}/dist/assets'
 
 
 #      - name: Upload assets to a Release
