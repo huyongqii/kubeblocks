@@ -58,7 +58,7 @@ jobs:
 #            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
 #          done
 
-      - name: upload asset
+      - name: gather asset to assets directory
         run: |
           pwd
           ls dist
@@ -69,7 +69,7 @@ jobs:
           done
           ls dist/assets
 
-      - name: Create Release With Asset
+      - name: upload
         uses: Hs1r1us/Release-AIO@v2.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -78,30 +78,30 @@ jobs:
           asset_files: '${{ github.workspace }}/dist/assets'
 
 
-      - name: Duplicate Release With Asset to public_Repo
-        uses: Hs1r1us/Release-AIO@v2.0.0
-        env:
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-        with:
-          tag_name: 'inherit' # Must use 'inherit' to get the latest release
-          body: 'hello world' # Will be added in the new release
-          repo: ${{ env.CLI_REPO }} # The format is like owner/repo
-          asset_files: '${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe' # Will be added in the new release
-
-
-
-#      - name: get release kbcli upload url
-#        run: |
-#          echo 'UPLOAD_URL='`bash ${{ github.workspace }}/.github/utils/utils.sh \
-#            --tag-name ${{ env.TAG_NAME }} \
-#            --type 3 \
-#            --github-repo ${{ env.CLI_REPO }} \
-#            --github-token ${{ env.GITHUB_TOKEN }}` >> $GITHUB_ENV
-#
-#      - name: upload kbcli binary release for winget
-#        uses: actions/upload-release-asset@main
+#      - name: Duplicate Release With Asset to public_Repo
+#        uses: Hs1r1us/Release-AIO@v2.0.0
+#        env:
+#          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 #        with:
-#          upload_url: ${{ env.UPLOAD_URL }}
-#          asset_path: ${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe
-#          asset_name: ${{ env.CLI_NAME }}.exe
-#          asset_content_type: application/octet-stream
+#          tag_name: 'inherit' # Must use 'inherit' to get the latest release
+#          body: 'hello world' # Will be added in the new release
+#          repo: ${{ env.CLI_REPO }} # The format is like owner/repo
+#          asset_files: '${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe' # Will be added in the new release
+#
+
+
+      - name: get release kbcli upload url
+        run: |
+          echo 'UPLOAD_URL='`bash ${{ github.workspace }}/.github/utils/utils.sh \
+            --tag-name ${{ env.TAG_NAME }} \
+            --type 3 \
+            --github-repo ${{ env.CLI_REPO }} \
+            --github-token ${{ env.GITHUB_TOKEN }}` >> $GITHUB_ENV
+
+      - name: upload kbcli binary release for winget
+        uses: actions/upload-release-asset@main
+        with:
+          upload_url: ${{ env.UPLOAD_URL }}
+          asset_path: ${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe
+          asset_name: ${{ env.CLI_NAME }}.exe
+          asset_content_type: application/octet-stream
