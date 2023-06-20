@@ -84,27 +84,27 @@ jobs:
 #        with:
 #          asset_paths: '["${{ github.workspace }}/find.sh"]'
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: "Fetch tags"
+        id: fetch-tags
+        uses: actions/github-script@v2
+        with:
+          script: |
+            return require(`${process.env.GITHUB_WORKSPACE}/package.json`).version
+          result-encoding: string
+
+      - name: Upload release binaries
+        uses: boxpositron/upload-multiple-releases@1.0.6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_config: |
+            ${{ github.workspace }}/*.sh
+            ${{ github.workspace }}/*.tar.gz
+          tag_name: v${{ steps.fetch-tags.outputs.result }}
+          release_name: ${{ steps.fetch-tags.outputs.result }}
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: sekwah41/upload-release-assets@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: '${{ github.workspace }}/tmp/*.txt'
-          asset_name: tmp.txt
-          asset_content_type: application/octet-stream
+          overwrite: true
 
 
 #      - name: Upload assets to a Release
