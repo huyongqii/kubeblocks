@@ -50,6 +50,7 @@ jobs:
           args: release --config ${{ github.workspace }}/.goreleaser.yaml --clean
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
 
 #      - name: upload .rpm and .deb to fury.io
 #        run: |
