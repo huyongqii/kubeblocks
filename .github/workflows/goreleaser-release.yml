@@ -42,6 +42,8 @@ jobs:
           cd ..
           tar -czvf archive.tar.gz tmp
           tar -czvf archive2.tar.gz tmp
+          pwd
+          ls
       
 
       #      - name: Import GPG key
@@ -77,7 +79,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         with:
-          asset_paths: '["${{ github.workspace }}/dist/*.{gz,zip}"]'
+          asset_paths: '["${{ github.workspace }}/*.{gz,zip}"]'
 
 
 #      - name: get release kbcli upload url
