@@ -52,25 +52,25 @@ jobs:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
 
-#      - name: upload .rpm and .deb to fury.io
-#        run: |
-#          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
-#            echo "Processing file: $file"
-#            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
-#          done
-
-      - name: get release kbcli upload url
+      - name: upload .rpm and .deb to fury.io
         run: |
-          echo 'UPLOAD_URL='`bash ${{ github.workspace }}/.github/utils/utils.sh \
-            --tag-name ${{ env.TAG_NAME }} \
-            --type 3 \
-            --github-repo ${{ env.CLI_REPO }} \
-            --github-token ${{ env.GITHUB_TOKEN }}` >> $GITHUB_ENV
+          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
+            echo "Processing file: $file"
+            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
+          done
 
-      - name: upload kbcli binary release for winget
-        uses: actions/upload-release-asset@main
-        with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: ${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe
-          asset_name: ${{ env.CLI_NAME }}.exe
-          asset_content_type: application/octet-stream
+#      - name: get release kbcli upload url
+#        run: |
+#          echo 'UPLOAD_URL='`bash ${{ github.workspace }}/.github/utils/utils.sh \
+#            --tag-name ${{ env.TAG_NAME }} \
+#            --type 3 \
+#            --github-repo ${{ env.CLI_REPO }} \
+#            --github-token ${{ env.GITHUB_TOKEN }}` >> $GITHUB_ENV
+#
+#      - name: upload kbcli binary release for winget
+#        uses: actions/upload-release-asset@main
+#        with:
+#          upload_url: ${{ env.UPLOAD_URL }}
+#          asset_path: ${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe
+#          asset_name: ${{ env.CLI_NAME }}.exe
+#          asset_content_type: application/octet-stream
