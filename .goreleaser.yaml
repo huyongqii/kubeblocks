@@ -140,7 +140,7 @@ checksum:
   algorithm: sha256
 
 signs:
-  - artifacts: all
+  - artifacts: package
     args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}","${artifact}"]
     output: true
 
