@@ -47,11 +47,22 @@ jobs:
 #        with:
 #          tag_name: ${{ github.ref }}
 #          asset_files: '${{ github.workspace }}/tmp'
+#
+#      - name: Publish a release and upload assets
+#        uses: cb80/pubrel@v0.17.0
+#        with:
+#          replace: true
+#          files: |
+#            ${{ github.workspace }}/dist/kbcli
+#            t3.txt
 
-      - name: Publish a release and upload assets
-        uses: cb80/pubrel@v0.17.0
+      - name: Upload release assets to an existing release
+        uses: echapmanFromBunnings/upload-release-assets@1.3
         with:
-          replace: true
-          files: '*.txt'
+          releaseTag: ${{ github.ref }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            *.txt
+
 
 
