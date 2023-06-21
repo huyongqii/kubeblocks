@@ -31,14 +31,17 @@ jobs:
           go-version: "1.20"
       - run: |
           git fetch --force --tags
+          mkdir dist
+          cd dist
           touch t1.txt
           touch t2.txt
           touch t3.txt
           echo "t1" > t1.txt
           echo "t2" > t2.txt
           echo "t3" > t3.txt
-          mkdir tmp
-          mv t1.txt tmp
+          tar -czvf t1.tar.gz t1.txt
+          tar -czvf t3.tar.gz t3.txt
+          zip -r t2.zip t2.txt
 
 #      - name: upload assets to kubeblocks's release
 #        uses: Hs1r1us/Release-AIO@v2.0.0
@@ -62,7 +65,8 @@ jobs:
           releaseTag: 'v0.8.2'
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            *.txt
+            ./dist/*.tar.gz
+            ./dist/*.zip
 
 
 
