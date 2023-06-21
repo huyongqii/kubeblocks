@@ -62,6 +62,14 @@ jobs:
             curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
           done
 
+#      - name: publish a release and upload assets
+#        uses: cb80/pubrel@v0.17.0
+#        with:
+#          replace: true
+#          files: |
+#            t2.txt
+#            t3.txt
+
 #      - name: gather asset to assets directory
 #        run: |
 #          mkdir dist/assets

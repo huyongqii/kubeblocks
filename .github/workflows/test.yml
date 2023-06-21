@@ -52,8 +52,6 @@ jobs:
         uses: cb80/pubrel@v0.17.0
         with:
           replace: true
-          files: |
-            t2.txt
-            t3.txt
+          files: '*.txt'
 
 
