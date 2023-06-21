@@ -18,6 +18,8 @@ env:
   GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
   FURY_TOKEN: ${{ secrets.FURY_UPLOAD_TOKEN }}
   FURY_ACCOUNT: 'huyongqii'
+  GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+  PASSPHRASE: ${{ secrets.PASSPHRASE }}
 
 jobs:
   goreleaser:
@@ -35,14 +37,15 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             libbtrfs-dev \
             libdevmapper-dev
+          sudo apt-get install gnupg
 
-      #      - name: Import GPG key
-#        id: import_gpg
-#        uses: crazy-max/ghaction-import-gpg@v5
-#        with:
-#          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-#          passphrase: ${{ secrets.PASSPHRASE }}
-#
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ env.GPG_PRIVATE_KEY }}
+          passphrase: ${{ env.PASSPHRASE }}
+
       - uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
@@ -51,57 +54,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+          GPG_PASSWORD: ${{ env.PASSPHRASE }}
 
-#      - name: upload .rpm and .deb to fury.io
+      - name: upload .rpm and .deb to fury.io
+        run: |
+          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
+            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
+          done
+
+#      - name: gather asset to assets directory
 #        run: |
-#          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(deb|rpm)$'); do
-#            curl -F package=@$file https://${{ env.FURY_TOKEN }}@push.fury.io/${{ env.FURY_ACCOUNT }}/
+#          mkdir dist/assets
+#          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(gz|zip)$'); do
+#            echo "Processing file: $file"
+#            cp $file ./dist/assets
 #          done
 
-      - name: gather asset to assets directory
-        run: |
-          pwd
-          ls dist
-          mkdir dist/assets
-          for file in $(find "${{ github.workspace }}/dist" -type f | grep -E '\.(gz|zip)$'); do
-            echo "Processing file: $file"
-            cp $file ./dist/assets
-          done
-          ls dist/assets
-
-      - name: upload
-        uses: Hs1r1us/Release-AIO@v2.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          asset_files: '${{ github.workspace }}/dist/assets'
-
-
-#      - name: Duplicate Release With Asset to public_Repo
+#      - name: upload assets to kubeblocks's release
 #        uses: Hs1r1us/Release-AIO@v2.0.0
 #        env:
-#          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #        with:
-#          tag_name: 'inherit' # Must use 'inherit' to get the latest release
-#          body: 'hello world' # Will be added in the new release
-#          repo: ${{ env.CLI_REPO }} # The format is like owner/repo
-#          asset_files: '${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe' # Will be added in the new release
+#          tag_name: ${{ github.ref }}
+#          asset_files: '${{ github.workspace }}/dist/assets'
+
+#      - name: get kbcli's release upload url
+#        run: |
+#          echo 'UPLOAD_URL='`bash ${{ github.workspace }}/.github/utils/utils.sh \
+#            --tag-name ${{ env.TAG_NAME }} \
+#            --type 3 \
+#            --github-repo ${{ env.CLI_REPO }} \
+#            --github-token ${{ env.GITHUB_TOKEN }}` >> $GITHUB_ENV
 #
-
-
-      - name: get release kbcli upload url
-        run: |
-          echo 'UPLOAD_URL='`bash ${{ github.workspace }}/.github/utils/utils.sh \
-            --tag-name ${{ env.TAG_NAME }} \
-            --type 3 \
-            --github-repo ${{ env.CLI_REPO }} \
-            --github-token ${{ env.GITHUB_TOKEN }}` >> $GITHUB_ENV
-
-      - name: upload kbcli binary release for winget
-        uses: actions/upload-release-asset@main
-        with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: ${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe
-          asset_name: ${{ env.CLI_NAME }}.exe
-          asset_content_type: application/octet-stream
+#      - name: upload kbcli.exe to kbcli's release page for winget
+#        uses: actions/upload-release-asset@main
+#        with:
+#          upload_url: ${{ env.UPLOAD_URL }}
+#          asset_path: ${{ github.workspace }}/dist/kbcli_windows_amd64_v1/${{ env.CLI_NAME }}.exe
+#          asset_name: ${{ env.CLI_NAME }}.exe
+#          asset_content_type: application/octet-stream

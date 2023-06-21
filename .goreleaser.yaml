@@ -1,31 +1,34 @@
+project_name: kbcli
+
+release:
+  github:
+    owner: huyongqii
+    name: tap-test
+
 before:
   hooks:
-    # You may remove this if you don't use go modules.
     - go mod tidy
-    # you may remove this if you don't need go generate
-    #    - go generate ./...
     - make generate
+
 builds:
   - main: cmd/cli/main.go
-    id: "kbcli"
+    id: kbcli
     binary: kbcli
     goos:
 #      - linux
-      - windows
-#      - darwin
+#      - windows
+      - darwin
     goarch:
       - amd64
       - arm64
     env:
       - ASSUME_NO_MOVING_GC_UNSAFE_RISK_IT_WITH=go1.20
       - CGO_ENABLED=0
-env:
-  - ProjectName=kbcli
 
 archives:
   - format: tar.gz
     name_template: >-
-      {{- .Env.ProjectName }}-
+      {{- .ProjectName }}-
       {{- .Os }}-
       {{- if eq .Arch "amd64" }}amd64
       {{- else if eq .Arch "386" }}i386
@@ -36,39 +39,27 @@ archives:
       format:
         zip
 
-gitlab_urls:
-  use_package_registry: true
-
-release:
-  github:
-    owner: huyongqii
-    name: tap-test
-
-#nfpms:
-#  -
-#    id: kbcli
-#    package_name: kbcli
-#    file_name_template: "{{ .Env.ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Tag }}"
-#    builds:
-#      - kbcli
-#
-#    vendor: ApeCloud Inc.
-#    homepage: kubeblocks.io
-#    maintainer: ApeCloud Inc.
-#    description: A CLI tool for kubeblocks
-#    license: Apache-2.0
-#    release: "1"
-#
-#    formats:
-#      - deb
-#      - rpm
-#
-#    dependencies:
-#      - git
-#      - zsh
-#
-#    # Path that the binaries should be installed.
-#    bindir: /usr/bin
+nfpms:
+  -
+    id: kbcli
+    package_name: kbcli
+    file_name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Tag }}"
+    builds:
+      - kbcli
+    vendor: ApeCloud Inc.
+    homepage: kubeblocks.io
+    maintainer: ApeCloud Inc.
+    description: A CLI tool for kubeblocks
+    license: Apache-2.0
+    release: "1"
+    formats:
+      - deb
+      - rpm
+    dependencies:
+      - git
+      - zsh
+    # Path that the binaries should be installed.
+    bindir: /usr/bin
 
 #brews:
 #  - name: kbcli
@@ -92,7 +83,7 @@ release:
 #    commit_author:
 #      name: huyongqii
 #      email: yongqi_hu@163.com
-#    commit_msg_template: "Brew formula update for {{ .Env.ProjectName }} version {{ .Tag }}"
+#    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
 #    # Folder inside the repository to put the formula.
 #    folder: Formula
 #
@@ -131,18 +122,22 @@ release:
 #    commit_author:
 #      name: huyongqii
 #      email: yongqi_hu@163.com
-#    commit_msg_template: "Scoop formula update for {{ .Env.ProjectName }} version {{ .Tag }}"
+#    commit_msg_template: "Scoop formula update for {{ .ProjectName }} version {{ .Tag }}"
 #    description: "Software to create fast and easy drum rolls."
 #    license: MIT
 
 checksum:
-  name_template: '{{ .Env.ProjectName }}-checksums.txt'
+  name_template: '{{ .ProjectName }}-checksums.txt'
   algorithm: sha256
 
+signs:
+  - artifacts: package
+    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "${artifact}", "{{ .ProjectName }}"]
+    stdin: '{{ .Env.GPG_PASSWORD }}'
+
 #signs:
-#  - artifacts: package
-#    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}"]
-#    output: true
+#  - artifacts: checksum
+#    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
 
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
@@ -153,7 +148,6 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
-
 
 # The lines beneath this are called `modelines`. See `:help modeline`
 # Feel free to remove those if you don't want/use them.
