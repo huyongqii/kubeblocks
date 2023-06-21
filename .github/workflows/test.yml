@@ -34,9 +34,9 @@ jobs:
           touch t1.txt
           touch t2.txt
           touch t3.txt
-          ehco "t1" > t1.txt
-          ehco "t2" > t2.txt
-          ehco "t3" > t3.txt
+          echo "t1" > t1.txt
+          echo "t2" > t2.txt
+          echo "t3" > t3.txt
           mkdir tmp
           mv t1.txt tmp
 
