@@ -19,7 +19,7 @@ builds:
 #      - windows
 #      - darwin
     goarch:
-      - amd64
+#      - amd64
       - arm64
     env:
       - ASSUME_NO_MOVING_GC_UNSAFE_RISK_IT_WITH=go1.20
@@ -138,9 +138,13 @@ checksum:
 #    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "${artifact}", "{{ .ProjectName }}","--detach-sign", "${artifact}"]
 #    stdin: '{{ .Env.GPG_PASSWORD }}'
 
+#signs:
+#  - artifacts: checksum
+#    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "${artifact}"]
+
 signs:
   - artifacts: checksum
-    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "${artifact}"]
+    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
 
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
