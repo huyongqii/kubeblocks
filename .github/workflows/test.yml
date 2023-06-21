@@ -1,0 +1,58 @@
+name: test
+
+on:
+  push:
+
+permissions:
+  contents: write
+  # packages: write
+  # issues: write
+
+env:
+  GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+  TAG_NAME: ${{ github.ref_name }}
+  CLI_REPO: 'huyongqii/tap-test'
+  CLI_NAME: 'kbcli'
+  GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+  FURY_TOKEN: ${{ secrets.FURY_UPLOAD_TOKEN }}
+  FURY_ACCOUNT: 'huyongqii'
+  GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+  PASSPHRASE: ${{ secrets.PASSPHRASE }}
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+      - run: |
+          git fetch --force --tags
+          touch t1.txt
+          touch t2.txt
+          touch t3.txt
+          ehco "t1" > t1.txt
+          ehco "t2" > t2.txt
+          ehco "t3" > t3.txt
+          mkdir tmp
+          mv t1.txt tmp
+
+      - name: upload assets to kubeblocks's release
+        uses: Hs1r1us/Release-AIO@v2.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          asset_files: '${{ github.workspace }}/tmp'
+
+      - name: Publish a release and upload assets
+        uses: cb80/pubrel@v0.17.0
+        with:
+          files: |
+            t2.txt
+            t3.txt
+
+
