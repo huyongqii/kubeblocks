@@ -50,8 +50,8 @@ jobs:
 
       - name: Publish a release and upload assets
         uses: cb80/pubrel@v0.17.0
-        replace: true
         with:
+          replace: true
           files: |
             t2.txt
             t3.txt
