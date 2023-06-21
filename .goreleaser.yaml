@@ -15,9 +15,9 @@ builds:
     id: kbcli
     binary: kbcli
     goos:
-#      - linux
+      - linux
 #      - windows
-      - darwin
+#      - darwin
     goarch:
       - amd64
       - arm64
