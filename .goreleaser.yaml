@@ -143,8 +143,8 @@ checksum:
 #    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "${artifact}"]
 
 signs:
-  - artifacts: checksum
-    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--sign", "${artifact}"]
+  - artifacts: package
+    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${artifact}", "--sign", "${artifact}"]
 
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
