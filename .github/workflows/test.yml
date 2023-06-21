@@ -40,13 +40,13 @@ jobs:
           mkdir tmp
           mv t1.txt tmp
 
-      - name: upload assets to kubeblocks's release
-        uses: Hs1r1us/Release-AIO@v2.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          asset_files: '${{ github.workspace }}/tmp'
+#      - name: upload assets to kubeblocks's release
+#        uses: Hs1r1us/Release-AIO@v2.0.0
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: ${{ github.ref }}
+#          asset_files: '${{ github.workspace }}/tmp'
 
       - name: Publish a release and upload assets
         uses: cb80/pubrel@v0.17.0
