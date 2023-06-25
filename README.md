@@ -8,8 +8,9 @@
 [![Releases](https://img.shields.io/github/release/apecloud/kubeblocks/all.svg?style=flat-square)](https://github.com/apecloud/kubeblocks/releases)
 [![TODOs](https://img.shields.io/endpoint?url=https://api.tickgit.com/badge?repo=github.com/apecloud/kubeblocks)](https://www.tickgit.com/browse?repo=github.com/apecloud/kubeblocks)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/apecloud)](https://artifacthub.io/packages/search?repo=apecloud)
-
-
+<a href="https://fury.co/f/partner">
+<img src="//badge.fury.io/fp/gemfury.svg" alt="Private Repository">
+</a>
 ![image](./docs/img/banner_website_version.png)
 
 
