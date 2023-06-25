@@ -11,6 +11,7 @@
 <a href="https://fury.co/f/partner">
 <img src="//badge.fury.io/fp/gemfury.svg" alt="Private Repository">
 </a>
+
 ![image](./docs/img/banner_website_version.png)
 
 
